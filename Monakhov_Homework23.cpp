@@ -4,36 +4,35 @@
 
 using namespace std;
 
-void dir(LPCWSTR sDir, LPCWSTR temp, bool sub = false) // передаем им€ файла и одну команду дл€ ввода в консоль
+void dir(LPCWSTR sDir, LPCWSTR temp, bool sub = false) 
 {
-	WIN32_FIND_DATAW wfd; // структора, котора€ описывает файл найденный ф-цией FindFirstFile
-	LARGE_INTEGER fileSize; // структура дл€ хранени€ 64-х битного значени€
+	WIN32_FIND_DATAW wfd;
+	LARGE_INTEGER fileSize; 
 	short cnt = 0;
-	HANDLE hFind = FindFirstFile(sDir, &wfd); // FindFirstFile - ф-ци€б котора€ ищет каталог файла или подкаталог
-											  // sDir - им€ файла, &wfd - буфер данных.
+	HANDLE hFind = FindFirstFile(sDir, &wfd); 
 	wcout << endl;
-	if (INVALID_HANDLE_VALUE != hFind) // если каталог существует тогда...
+	if (INVALID_HANDLE_VALUE != hFind) 
 	{
 		do
 		{
-			if (!(wfd.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN)) // если файл не скрытый тогда ...
+			if (!(wfd.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN)) 
 			{
-				if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) // если файл €вл€етс€ дирикторией ...
+				if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) 
 				{
-					wcout << "\t<DIR>"; // выводим в консоль <DIR>
+					wcout << "\t<DIR>"; 
 				}
-				else // иначе
+				else 
 				{
-					fileSize.LowPart = wfd.nFileSizeLow; // младшим 32-м битам присваиваем младшее двойное слово значени€ размера файла
-					fileSize.HighPart = wfd.nFileSizeHigh; // старшим 32-м битам присваиваем старшее двойное слово значени€ размера файла
-					wcout << fileSize.QuadPart << "\t"; // выводим в консоль 64-х битное значение размера файла
+					fileSize.LowPart = wfd.nFileSizeLow;
+					fileSize.HighPart = wfd.nFileSizeHigh; 
+					wcout << fileSize.QuadPart << "\t"; 
 				}
-				wcout << "\t" << wfd.cFileName << endl; // устанавливаем и выводим в консоль им€ файла
-				cnt++; // увеличиваем счетчик
+				wcout << "\t" << wfd.cFileName << endl; 
+				cnt++; 
 			}
-		} while (NULL != FindNextFileW(hFind, &wfd)); // когда файлы закончатс€
-		FindClose(hFind); // прекращаем поиск
-		cout << "\nTotal files \t" << cnt << endl; // выводим в консоль количество файлов
+		} while (NULL != FindNextFileW(hFind, &wfd)); 
+		FindClose(hFind); 
+		cout << "\nTotal files \t" << cnt << endl; 
 	}  
 	hFind = FindFirstFileW(sDir, &wfd);
 	wcout << endl;
@@ -77,10 +76,10 @@ void dir(LPCWSTR sDir, LPCWSTR temp, bool sub = false) // передаем им€ файла и о
 	}
 }
 
-int main(short argc, char* argv[]) //argc - кол-во команд дл€ ввода в консол,
-{								  //argv - название команды
+int main(short argc, char* argv[]) 
+{								 
 	setlocale(LC_ALL, "");
-	WCHAR sDir[MAX_PATH] = L".\\*.*";	// им€ файла
+	WCHAR sDir[MAX_PATH] = L".\\*.*";	
 	WCHAR temp[MAX_PATH] = L"\0";
 	dir(sDir, temp, (argc > 1));
 	wcout << endl;
